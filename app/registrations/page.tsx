@@ -1,5 +1,5 @@
 'use client'
-
+// this has taske 3
 import Link from 'next/link'
 import { useAuth } from '@/components/AuthProvider'
 import { getRegistrationsForStudent } from '@/data/registrations'

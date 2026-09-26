@@ -1,8 +1,8 @@
 'use client'
-
-import { useState } from 'react'
-import { events, EventCategory } from '@/data/events'
+// this is done
 import EventCard from '@/components/EventCard'
+import { useMemo, useState } from 'react'
+import { events, EventCategory, searchEventsByName, filterEventsByCategory } from '@/data/events'
 
 const CATEGORIES: (EventCategory | 'All')[] = [
   'All',
@@ -21,8 +21,22 @@ export default function EventsPage() {
   // event in `events`. Wire this up to `searchEventsByName` and
   // `filterEventsByCategory` from data/events.ts, and make the two
   // compose together.
-  const [query, setQuery] = useState('')
+   const [query, setQuery] = useState('')
   const [category, setCategory] = useState<EventCategory | 'All'>('All')
+
+  const filteredEvents = useMemo(() => {
+    let result = events
+
+    if (category !== 'All') {
+      result = filterEventsByCategory(result, category)
+    }
+
+    if (query.trim() !== '') {
+      result = searchEventsByName(result, query)
+    }
+
+    return result
+  }, [query, category])
 
   return (
     <section className="shell" style={{ padding: '40px 0 64px' }}>
@@ -77,7 +91,7 @@ export default function EventsPage() {
           gap: 16,
         }}
       >
-        {events.map((event) => (
+        {filteredEvents.map((event) => (
           <EventCard key={event.id} event={event} />
         ))}
       </div>
